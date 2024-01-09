@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}Customer{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div>
+    <h1>Customer: </h1>
+
+    {% autoescape false %}
+    <div> {{ print_customers() }} </div>
+    {% endautoescape %}
+
+  </div>
+{% endblock %}
+
+{% block footer %}
+<div>
+  {{ super() }}
+  {{ date_now() }}
+</div>
+
+{% endblock %}
+
+  

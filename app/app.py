@@ -1,6 +1,6 @@
 import datetime
 import json
-from flask import Flask
+from flask import Flask, request
 from markupsafe import escape
 import requests
 from flask import render_template
@@ -14,7 +14,7 @@ def index():
 
 @app.route('/customer', methods=['GET','POST', 'PUT', 'DELETE'])
 def customer():
-    if requests.methods == "GET": 
+    if request.method == "GET": 
         
         s = requests.get('http://localhost:8080/rest/customer/get/all')
         print(s.json())
@@ -33,11 +33,11 @@ def get_customer_with_id(id):
 
 @app.route("/test")
 def test():
-    return render_template("base.html")
+    return render_template("Customer.html")
 
 @app.context_processor
 def context_processors():
-    def date_now(format="%d.m.%Y %H:%M:%S"):
+    def date_now(format="%d.%m.%Y %H:%M:%S"):
         """ returns the formated datetime """
         return datetime.datetime.now().strftime(format)
 

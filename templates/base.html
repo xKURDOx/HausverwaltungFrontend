@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+<head>
+<title>Flask Tutorial</title>
+</head>
+<body>
+<h1>This is the Index page</h1>
+<div>{{ date_now() }}</div>
+
+{% autoescape false %}
+<div> {{ print_customers() }} </div>
+{% endautoescape %}
+</body>
+</html>  

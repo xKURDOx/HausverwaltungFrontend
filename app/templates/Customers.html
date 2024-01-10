@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Customer{% endblock %}
+{% block title %}Customers{% endblock %}
 
 {% block head %}
   {{ super() }}
@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Customer: </h1>
+    <h1>Customers: </h1>
 
     {% autoescape false %}
     {{ print_customers() }}
@@ -29,7 +29,17 @@
       <form method="POST" action="/customer">
         <label for="id">ID: </label>
         <input type="text" id="id" name="id">
-        <input name="post" type="submit" value="delete">DELETE</input>
+        <input name="type" type="submit" value="delete">DELETE</input>
+      </form>
+      <h2>Edit customer: </h2>
+      <form method="POST" action="/customer">
+        <label for="id">ID: </label>
+        <input type="text" id="id" name="id">
+        <label for="firstname">First name: </label>
+        <input type="text" id="firstname" name="firstname">
+        <label for="lastname">Last name: </label>
+        <input type="text" id="lastname" name="lastname">
+        <input name="type" type="submit" value="edit">DELETE</input>
       </form>
     </div>
 

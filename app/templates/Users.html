@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Users{% endblock %}
 
 {% block head %}
   {{ super() }}
@@ -10,14 +10,14 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Home: </h1>
+    <h1>Users: </h1>
 
+    {% autoescape false %}
+    {{ print_users() }}
+    {% endautoescape %}
 
-    <div id="links_container">
-      <h2>Useful links </h2>
-      <a href="/">Home</a>
-      <a href="/customers">Customer</a>
-      <a href="/users">Users</a>
+    <div id="create_user_container">
+        
     </div>
 
 {% endblock %}

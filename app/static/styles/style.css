@@ -80,7 +80,8 @@ header {
 }
 
 
-#customer_table, #customer_table th, #customer_table td {
+/*#customer_table, #customer_table th, #customer_table td {*/
+table, table th, table td {
     border: 1px solid var(--border_color);
 
 }

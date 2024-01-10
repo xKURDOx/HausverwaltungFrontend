@@ -1,3 +1,31 @@
 html {
     background-color: greenyellow;
 }
+
+body {
+    position: absolute;
+    margin: auto;
+    height: 100%;
+    width: 100%;
+}
+
+#content {
+    background-color: rgb(158, 218, 68);
+}
+
+#footer-wrapper {
+    position: fixed;
+    bottom: 0;
+    height: 5%;
+    width: 100%;
+}
+
+
+
+#footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%; 
+}

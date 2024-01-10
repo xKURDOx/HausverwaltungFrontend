@@ -18,7 +18,7 @@ def index():
 #this just calls our rest-api and returns the json
 def get_customers():
     s = requests.get(base_url + 'rest/customer/get/all')
-    print(s.json())
+    print(f"GET_CUSTOMERS - JSON: \n {s.json}")
     return s.json() 
 
 #This doesnt have to be a route. @app.route('/customer/get/<id>/')
@@ -33,17 +33,24 @@ def get_customer_with_id(id):
         return (0, f"Error occured! Code: {s.status_code}; Reason: {s.reason}")
     #return s.json()   
 
-@app.route('/customer', methods=['GET','POST', 'PUT', 'DELETE'])
-def customer():
+@app.route('/customer', methods=['GET','POST', 'PUT'])
+def route_customer():
     print(request.method)
     if request.method == "GET": 
         return render_template("Customer.html")
     
     elif request.method == "POST":
-        s = requests.post(base_url + "rest/customer/create", data={"firstname": request.form["firstname"], "lastname": request.form["lastname"]})
+        #this is the actual api-call. DELETE has to be post for some browser-related-reasons i guess. It COULD be a normal method/route with a variable but yeaaah. #TODO.
         print(request.form)
+        print(request.form["post"])
+        if (request.form["post"] == "create"):
+            response = requests.post(base_url + "rest/customer/create", data={"firstname": request.form["firstname"], "lastname": request.form["lastname"]})
+        elif (request.form["post"] == "delete"):
+            response = requests.get(f"http://localhost:8080/rest/customer/delete/{request.form['id']}")
+        else:
+            print("thefuck?")
         return render_template("Customer.html")
- 
+
 
 @app.context_processor
 def context_processors():

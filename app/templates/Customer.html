@@ -17,13 +17,19 @@
     {% endautoescape %}
 
     <div id="create_customer_container">
-      <h2>CREATE CUSTOMER: </h2>
-      <form method="post" action="/customer">
+      <h2>Create customer: </h2>
+      <form method="POST" action="/customer">
         <label for="firstname">First name: </label>
-        <input type="text" id="firstname" name="firstname"><br><br>
+        <input type="text" id="firstname" name="firstname">
         <label for="lastname">Last name: </label>
-        <input type="text" id="lastname" name="lastname"><br><br>
-        <button name="create" type="submit" value="create">CREATE</button>
+        <input type="text" id="lastname" name="lastname">
+        <input name="post" type="submit" value="create">CREATE</input>
+      </form>
+      <h2>Delete customer: </h2>
+      <form method="POST" action="/customer">
+        <label for="id">ID: </label>
+        <input type="text" id="id" name="id">
+        <input name="post" type="submit" value="delete">DELETE</input>
       </form>
     </div>
 

@@ -3,11 +3,11 @@
   <head>
     {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
-    <title>{% block title %}{% endblock %} - Hausverwaltung</title>
+    <title>Hausverwaltung - {% block title %}{% endblock %} </title>
     {% endblock %}
   </head>
   <body>
-    <header>TESTHEADER</header>
+    <header><a href="http://localhost:5000/">HV</a>TESTHEADER</header>
     <div id="content-wrapper">
       <div id="content">{% block content %}{% endblock %}</div>
     </div>

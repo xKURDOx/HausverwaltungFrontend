@@ -10,15 +10,28 @@ base_url = "http://localhost:8080/"
 
 @app.route('/')
 def index():
-    s = requests.get('http://localhost:8080/rest/customer/get/all')
+    '''s = requests.get('http://localhost:8080/rest/customer/get/all')
     print(s.json())
-    return customer()
+    return customer()'''
+    return render_template("Home.html")
 
+#this just calls our rest-api and returns the json
 def get_customers():
     s = requests.get(base_url + 'rest/customer/get/all')
     print(s.json())
     return s.json() 
 
+#This doesnt have to be a route. @app.route('/customer/get/<id>/')
+#returns a tuplle. either (0, customer) or (1, error-message) idk why. I liked error-codes when i wrote this. 
+def get_customer_with_id(id):
+    s = requests.get(f'http://localhost:8080/rest/customer/get/{id}')
+    print(s.status_code)
+
+    if (s.status_code == 200): #s.ok would theoretically work but 204 (no content) results in errors again that would need manual fixing.
+        return (1, s.json())
+    else:
+        return (0, f"Error occured! Code: {s.status_code}; Reason: {s.reason}")
+    #return s.json()   
 
 @app.route('/customer', methods=['GET','POST', 'PUT', 'DELETE'])
 def customer():
@@ -30,18 +43,7 @@ def customer():
         s = requests.post(base_url + "rest/customer/create", data={"firstname": request.form["firstname"], "lastname": request.form["lastname"]})
         print(request.form)
         return render_template("Customer.html")
-
-
-@app.route('/customer/get/<id>/')
-def get_customer_with_id(id):
-    s = requests.get(f'http://localhost:8080/rest/customer/get/{id}')
-    print(s.status_code)
-
-    if (s.status_code == 200): #s.ok would theoretically work but 204 (no content) results in errors again that would need manual fixing.
-        return s.json()
-    else:
-        return f"Error occured! Code: {s.status_code}; Reason: {s.reason}"
-    #return s.json()    
+ 
 
 @app.context_processor
 def context_processors():

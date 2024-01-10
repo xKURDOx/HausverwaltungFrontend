@@ -1,5 +1,20 @@
+/*
+type: stylesheet
+author: julian mandl
+version: 0.2
+
+Content:
+
+1 - Defaults (body, html, etc)
+2 - HEADER
+3 - FOOTER
+4 - OTHER (toberenamed)
+5 - COLOR
+*/
+
+/* 1 - Defaults */
 html {
-    background-color: greenyellow;
+    background-color: var(--background_color_primary);
 }
 
 body {
@@ -9,10 +24,40 @@ body {
     width: 100%;
 }
 
+/* 2 - HEADER */
+header {
+    border-bottom: 1px solid var(--border_color);
+    font-size: large;
+    /*margin: 0px 0px 10px 0px;*/
+    background: var(--background_color_teritary);
+    /*z-index: 10 !important;*/
+    position: fixed;
+    width: 100%;
+}
+
+/* 3 - FOOTER */
+#footer-wrapper {
+    position: fixed;
+    bottom: 0;
+    height: 5%;
+    width: 100%;
+    border-top: 1px solid var(--border_color);
+    /* z-index: 10; */
+    background: var(--background_color_teritary);
+}
+#footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%; 
+}
+
+/*4 - OTHER */
 /*I don't currently like the way this is centered but hey.*/
 #content-wrapper {
     text-align: center;
-    background-color: rgb(158, 218, 68);
+    background-color: var(--background_color_secondary);
     top: 50%;
     left: 50%;
     height: 80%;
@@ -34,23 +79,18 @@ body {
     align-items: center;
 }
 
-#footer-wrapper {
-    position: fixed;
-    bottom: 0;
-    height: 5%;
-    width: 100%;
-}
 
 #customer_table, #customer_table th, #customer_table td {
-    border: 1px solid black;
+    border: 1px solid var(--border_color);
 
 }
 
+/* 5 - COLORS */
+:root {
+    --background_color_primary: rgb(155, 235, 36);
+    --background_color_secondary: rgb(137, 189, 61);
+    --background_color_teritary: rgb(78, 104, 54);
 
-#footer {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    height: 100%; 
+    --border_color: black;
 }
+

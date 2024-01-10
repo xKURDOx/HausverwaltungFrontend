@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Home: </h1>
+
+
+    <div id="links_container">
+      <h2>Useful links </h2>
+      <a href="/">Home</a>
+      <a href="/customer">Customer</a>
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+<div>
+  {{ super() }}
+  {{ date_now() }}
+</div>
+
+{% endblock %}
+
+  

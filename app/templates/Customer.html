@@ -10,14 +10,12 @@
 {% endblock %}
 
 {% block content %}
-  <div>
     <h1>Customer: </h1>
 
     {% autoescape false %}
-    <div> {{ print_customers() }} </div>
+    {{ print_customers() }}
     {% endautoescape %}
 
-  </div>
 {% endblock %}
 
 {% block footer %}

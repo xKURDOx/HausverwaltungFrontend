@@ -43,7 +43,7 @@ def context_processors():
 
     def print_customers():
         cList = customer()
-        str = """<table>
+        str = """<table id='customer_table'>
             <tr><th>LAST</th><th>FIRST</th><th>ID</th></tr>"""
         for c in cList:
             str += f"<tr><td>{c['lastname']}</td><td>{c['firstname']}</td><td>{c['id']}</td><tr>"

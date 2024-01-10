@@ -10,7 +10,15 @@ body {
 }
 
 #content {
+    text-align: center;
     background-color: rgb(158, 218, 68);
+    top: 50%;
+    left: 50%;
+    height: 80%;
+    width: 95%;
+    padding: 10px;
+    position: absolute;
+    transform: translate(-50%, -50%);
 }
 
 #footer-wrapper {
@@ -20,7 +28,10 @@ body {
     width: 100%;
 }
 
+#customer_table, #customer_table th, #customer_table td {
+    border: 1px solid black;
 
+}
 
 #footer {
     display: flex;

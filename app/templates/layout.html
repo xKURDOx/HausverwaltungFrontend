@@ -8,7 +8,9 @@
   </head>
   <body>
     <header>TESTHEADER</header>
-    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="content-wrapper">
+      <div id="content">{% block content %}{% endblock %}</div>
+    </div>
     <div id="footer-wrapper">
       <div id="footer">
         {% block footer %}

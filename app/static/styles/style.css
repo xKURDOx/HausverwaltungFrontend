@@ -9,7 +9,8 @@ body {
     width: 100%;
 }
 
-#content {
+/*I don't currently like the way this is centered but hey.*/
+#content-wrapper {
     text-align: center;
     background-color: rgb(158, 218, 68);
     top: 50%;
@@ -19,6 +20,18 @@ body {
     padding: 10px;
     position: absolute;
     transform: translate(-50%, -50%);
+}
+
+/*this sets everything inside the content to be centered *somehow* */
+#content > * {
+    margin: 0 auto;
+}
+
+#create_customer_container > form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 #footer-wrapper {
@@ -32,6 +45,7 @@ body {
     border: 1px solid black;
 
 }
+
 
 #footer {
     display: flex;

@@ -6,19 +6,31 @@ import requests
 from flask import render_template
 
 app = Flask(__name__)
+base_url = "http://localhost:8080/"
+
 @app.route('/')
 def index():
     s = requests.get('http://localhost:8080/rest/customer/get/all')
     print(s.json())
     return customer()
 
+def get_customers():
+    s = requests.get(base_url + 'rest/customer/get/all')
+    print(s.json())
+    return s.json() 
+
+
 @app.route('/customer', methods=['GET','POST', 'PUT', 'DELETE'])
 def customer():
+    print(request.method)
     if request.method == "GET": 
-        
-        s = requests.get('http://localhost:8080/rest/customer/get/all')
-        print(s.json())
-        return s.json()   
+        return render_template("Customer.html")
+    
+    elif request.method == "POST":
+        s = requests.post(base_url + "rest/customer/create", data={"firstname": request.form["firstname"], "lastname": request.form["lastname"]})
+        print(request.form)
+        return render_template("Customer.html")
+
 
 @app.route('/customer/get/<id>/')
 def get_customer_with_id(id):
@@ -31,10 +43,6 @@ def get_customer_with_id(id):
         return f"Error occured! Code: {s.status_code}; Reason: {s.reason}"
     #return s.json()    
 
-@app.route("/test")
-def test():
-    return render_template("Customer.html")
-
 @app.context_processor
 def context_processors():
     def date_now(format="%d.%m.%Y %H:%M:%S"):
@@ -42,7 +50,7 @@ def context_processors():
         return datetime.datetime.now().strftime(format)
 
     def print_customers():
-        cList = customer()
+        cList = get_customers()
         str = """<table id='customer_table'>
             <tr><th>LAST</th><th>FIRST</th><th>ID</th></tr>"""
         for c in cList:

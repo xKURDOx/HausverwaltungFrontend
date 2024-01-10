@@ -16,6 +16,17 @@
     {{ print_customers() }}
     {% endautoescape %}
 
+    <div id="create_customer_container">
+      <h2>CREATE CUSTOMER: </h2>
+      <form method="post" action="/customer">
+        <label for="firstname">First name: </label>
+        <input type="text" id="firstname" name="firstname"><br><br>
+        <label for="lastname">Last name: </label>
+        <input type="text" id="lastname" name="lastname"><br><br>
+        <button name="create" type="submit" value="create">CREATE</button>
+      </form>
+    </div>
+
 {% endblock %}
 
 {% block footer %}

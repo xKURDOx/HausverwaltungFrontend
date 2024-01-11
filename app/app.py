@@ -57,7 +57,10 @@ def route_customer():
         #print("0:" + request.form[0])
         #print("type:" +  request.form["type"])
         if (request.form["type"] == "create"):
-            response = requests.post(base_url + "rest/customer/create", data={"firstname": request.form["firstname"], "lastname": request.form["lastname"]})
+            j = {"firstname": request.form["firstname"], "lastname": request.form["lastname"], "id": -1}
+            print(j)
+            response = requests.post(base_url + "rest/customer/create", json=j)
+            print(response.content)
         elif (request.form["type"] == "edit"):
             #TODO: why do we need json here but data works fine for the create-endpoint? makes sense but also doesn't.
             response = requests.put(f"http://localhost:8080/rest/customer/edit", json={"firstname": request.form["firstname"], "lastname": request.form["lastname"], "id": request.form["id"]})

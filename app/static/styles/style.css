@@ -89,7 +89,7 @@ header {
   
   .object_table td, .object_table th {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 6px;
   }
   
   .object_table tr:nth-child(even) {background-color: var(--table_color_even);}
@@ -98,8 +98,8 @@ header {
   .object_table tr:hover {background-color: var(--table_color_hover);}
   
   .object_table th {
-    padding-top: 12px;
-    padding-bottom: 12px;
+    padding-top: 8px;
+    padding-bottom: 8px;
     text-align: left;
     background-color: var(--table_color_header);
     color: var(--font_color_secondary);

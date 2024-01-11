@@ -17,7 +17,33 @@
     {% endautoescape %}
 
     <div id="create_user_container">
-        
+      <h2>Create user: </h2>
+      <form method="POST" action="/users/create">
+        <label for="firstname">First name: </label>
+        <input type="text" id="firstname" name="firstname">
+        <label for="lastname">Last name: </label>
+        <input type="text" id="lastname" name="lastname">
+        <label for="password">Password: </label>
+        <input type="text" id="password" name="password">
+        <label for="token">Token: </label>
+        <input type="text" id="token" name="token">
+        <input name="type" type="submit" value="create">
+      </form>
+
+      <h2>Edit user: </h2>
+      <form method="POST" action="/users/edit">
+        <label for="id">ID: </label>
+        <input type="text" id="id" name="id">
+        <label for="firstname">First name: </label>
+        <input type="text" id="firstname" name="firstname">
+        <label for="lastname">Last name: </label>
+        <input type="text" id="lastname" name="lastname">
+        <label for="password">Password: </label>
+        <input type="text" id="password" name="password">
+        <label for="token">Token: </label>
+        <input type="text" id="token" name="token">
+        <input name="type" type="submit" value="edit">
+      </form>
     </div>
 
 {% endblock %}

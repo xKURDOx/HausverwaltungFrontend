@@ -81,17 +81,45 @@ header {
 
 
 /*#customer_table, #customer_table th, #customer_table td {*/
-table, table th, table td {
-    border: 1px solid var(--border_color);
-
-}
+.object_table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .object_table td, .object_table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .object_table tr:nth-child(even) {background-color: var(--table_color_even);}
+  .object_table tr:nth-child(odd) {background-color: var(--table_color_odd);}
+  
+  .object_table tr:hover {background-color: var(--table_color_hover);}
+  
+  .object_table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: var(--table_color_header);
+    color: var(--font_color_secondary);
+  }
 
 /* 5 - COLORS */
 :root {
+    --font_color_primary: rgb(14, 14, 14);
+    --font_color_secondary: white;
+
     --background_color_primary: rgb(155, 235, 36);
     --background_color_secondary: rgb(137, 189, 61);
     --background_color_teritary: rgb(78, 104, 54);
 
     --border_color: black;
+
+    --table_color_header: #04AA6D;
+    --table_color_even: rgb(48, 161, 118);
+    --table_color_odd: #48d884;
+    --table_color_hover: #698a7e;
+
 }
 

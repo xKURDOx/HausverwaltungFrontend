@@ -41,25 +41,34 @@ def get_users():
     else:
         return (0, f"Error occured! Code: {response.status_code}; Reason: {response.reason}")
 
-@app.route('/customers', methods=['GET','POST', 'PUT'])
+def delete_user(id):
+    response = requests.get(f"http://localhost:8080/rest/customer/delete/{id}")
+
+
+@app.route('/customers', methods=['GET','POST'])
 def route_customer():
-    print(request.method)
-    if request.method == "GET": 
-        return render_template("Customers.html")
+    print("REQ-Method:" + request.method)
+    # if request.method == "GET": 
+    #     return render_template("Customers.html")
     
-    elif request.method == "POST":
+    if request.method == "POST":
         #this is the actual api-call. DELETE has to be post for some browser-related-reasons i guess. It COULD be a normal method/route with a variable but yeaaah. #TODO.
-        print(request.form)
-        print(request.form["type"])
+        print("REQ-FORM: " + str(request.form))
+        #print("0:" + request.form[0])
+        #print("type:" +  request.form["type"])
         if (request.form["type"] == "create"):
             response = requests.post(base_url + "rest/customer/create", data={"firstname": request.form["firstname"], "lastname": request.form["lastname"]})
-        elif (request.form["type"] == "delete"):
-            response = requests.get(f"http://localhost:8080/rest/customer/delete/{request.form['id']}")
         elif (request.form["type"] == "edit"):
-            response = requests.get(f"http://localhost:8080/rest/customer/edit/{request.form['id']}")
+            #TODO: why do we need json here but data works fine for the create-endpoint? makes sense but also doesn't.
+            response = requests.put(f"http://localhost:8080/rest/customer/edit", json={"firstname": request.form["firstname"], "lastname": request.form["lastname"], "id": request.form["id"]})
         else:
             print("thefuck?")
-        return render_template("Customers.html")
+    return render_template("Customers.html")
+
+@app.route('/customers/delete/<id>')
+def route_customer_delete(id):
+    delete_user(id)
+    return render_template("Customers.html")
 
 @app.route('/users')
 def route_users():
@@ -76,17 +85,17 @@ def context_processors():
 
     def print_customers():
         cList = get_customers()
-        str = """<table id='customer_table'>
-            <tr><th>LAST</th><th>FIRST</th><th>ID</th></tr>"""
+        str = """<table id='customer_table' class='object_table'>
+            <tr><th>LAST</th><th>FIRST</th><th>ID</th><th>action</th></tr>"""
         for c in cList:
-            str += f"<tr><td>{c['lastname']}</td><td>{c['firstname']}</td><td>{c['id']}</td><tr>"
+            str += f"<tr><td>{c['lastname']}</td><td>{c['firstname']}</td><td>{c['id']}</td><td><a href='/customers/delete/{c['id']}'>[delete]</a></td></tr>"
         str += "</table>"
         return str
 
     def print_users():
         getUsers = get_users()
         if (getUsers[0] == 0): 
-            return """<table id='user_table'>
+            return """<table id='user_table', class='object_table'>
             <tr><th>LAST</th><th>FIRST</th><th>ID</th></tr>
             <tr><td></td><td></td><td></td><tr>"""
         else:
@@ -94,7 +103,8 @@ def context_processors():
             str = """<table id='user_table'>
                 <tr><th>LAST</th><th>FIRST</th><th>ID</th></tr>"""
             for u in uList:
-                str += f"<tr><td>{u['lastname']}</td><td>{u['firstname']}</td><td>{u['id']}</td><tr>"
+                str += f"""<tr><td>{u['lastname']}</td><td>{u['firstname']}</td><td>{u['id']}</td>
+                <td><a href='/'>[x]</a></td></tr>"""
             str += "</table>"
             return str
 

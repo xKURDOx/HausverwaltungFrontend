@@ -2,6 +2,7 @@ import datetime
 from flask import Flask, request
 import requests
 from flask import render_template
+from data.Readings import Readings
 
 from data.Entity import Entity
 from data.Customer import Customer
@@ -46,22 +47,25 @@ def get_users_json():
         return (0, f"Error occured! Code: {response.status_code}; Reason: {response.reason}")
 
 def delete(o: Entity):
-    s = f"{BASE_URL}rest/{o.DB_TYPE}/delete/{o.id}"
+    s = f"{BASE_URL}rest/{o.get_get_db_type()}/delete/{o.id}"
     print(s)
     response = requests.get(s)
-    print("deleted.")
+    print("RESPONSE:")
     print(response.content)
 
 def edit(o: Entity):
-    s = f"{BASE_URL}rest/{o.DB_TYPE}/edit"
+    s = f"{BASE_URL}rest/{o.get_db_type()}/edit"
     response = requests.put(s, json=o.toDICT())
 
     print(response.status_code)
     print("edited.")
+    print("RESPONSE:")
     print(response.content)
 
 def create(o: Entity):
-    response = requests.post(f"{BASE_URL}rest/{o.DB_TYPE}/create", json=o.toDICT())
+    print(o.__dict__)
+    response = requests.post(f"{BASE_URL}rest/{o.get_db_type()}/create", json=o.toDICT())
+    print("RESPONSE:")
     print(response.content)
 
 
@@ -74,7 +78,18 @@ def index():
 def route_readings():
     return render_template("Readings.html")
 
-@app.route('/customers', methods=['GET','POST'])
+@app.route("/readings/create", methods=["POST"])
+def route_readings_create():
+    print("CREATE-REQ-FORM: " + str(request.form))
+    #fake-customer for request:
+    c  = Customer(id=request.form["customer"])
+    #none is 'better' than -1 i gues butttt does it maaatter?
+    r = Readings(id=None, comment=request.form["comment"], customer=c, dateofreading=request.form["dateofreading"], kindofmeter=request.form["kindofmeter"], metercount=request.form["metercount"], meterid=request.form["meterid"])
+    print(str(r))
+    create(r)
+    return render_template("Readings.html")
+
+@app.route('/customers')
 def route_customer():
     return render_template("Customers.html")
 

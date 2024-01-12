@@ -5,9 +5,11 @@ from data.constants import DB_Type
 
 @dataclass 
 class User(Entity):
+    firstname: str = ""
+    lastname: str = ""
     password: str = ""
     token: str = ""
-    DB_TYPE: str = DB_Type.USER.value
+    _DB_TYPE: str = DB_Type.USER.value
 
    
 

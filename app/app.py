@@ -1,15 +1,12 @@
 from dataclasses import dataclass
 import datetime
-from enum import Enum
-import json
-from types import SimpleNamespace
 from flask import Flask, jsonify, request
 from markupsafe import escape
 import requests
 from flask import render_template
 
-from Customer import Customer
-from User import User
+from data.Customer import Customer
+from data.User import User
 from data.constants import BASE_URL
 
 

@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %}Readings{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Readings: </h1>
+
+    {% autoescape false %}
+    {{ print_readings() }}
+    {% endautoescape %}
+
+    <div id="create_reading_container">
+      <h2>Create user: </h2>
+      <form method="POST" action="/readings/create">
+        <label for="firstname">First name: </label>
+        <input type="text" id="firstname" name="firstname">
+        <label for="lastname">Last name: </label>
+        <input type="text" id="lastname" name="lastname">
+        <input name="type" type="submit" value="edit">
+      </form>
+
+      <h2>Edit reading: </h2>
+      <form method="POST" action="/readings/edit">
+        <label for="id">ID: </label>
+        <input type="text" id="id" name="id">
+        <label for="firstname">First name: </label>
+        <input type="text" id="firstname" name="firstname">
+        <label for="lastname">Last name: </label>
+        <input type="text" id="lastname" name="lastname">
+        <input name="type" type="submit" value="edit">
+      </form>
+    </div>
+
+
+{% endblock %}
+
+{% block footer %}
+<div>
+  {{ super() }}
+  {{ date_now() }}
+</div>
+
+{% endblock %}
+
+  

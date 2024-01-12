@@ -1,36 +1,38 @@
-from dataclasses import dataclass
 import datetime
-from flask import Flask, jsonify, request
-from markupsafe import escape
+from flask import Flask, request
 import requests
 from flask import render_template
 
+from data.Entity import Entity
 from data.Customer import Customer
 from data.User import User
 from data.constants import BASE_URL
 
 
+##VARS
 app = Flask(__name__)
 
+##METHODS
 
-@app.route('/')
-def index():
-    return render_template("Home.html")
+def get_readings_json():
+    s = requests.get(BASE_URL + 'rest/reading/get/all')
+    print(f"GET_CUSTOMERS - JSON: \n {s.json()}")
+    return s.json() 
 
 #this just calls our rest-api and returns the json
 def get_customers_json():
     s = requests.get(BASE_URL + 'rest/customer/get/all')
-    print(f"GET_CUSTOMERS - JSON: \n {s.json}")
+    print(f"GET_CUSTOMERS - JSON: \n {s.json()}")
     return s.json() 
 
 #This doesnt have to be a route. @app.route('/customer/get/<id>/')
-#returns a tuplle. either (0, customer) or (1, error-message) idk why. I liked error-codes when i wrote this. 
+#returns a tuple. either (0, customer-json) or (1, error-message) idk why. I liked error-codes when i wrote this. 
 def get_customer_with_id(id):
     response = requests.get(f'{BASE_URL}rest/customer/get/{id}')
     print(response.status_code)
 
     if (response.status_code == 200): #s.ok would theoretically work but 204 (no content) results in errors again that would need manual fixing.
-        return (1, response.json())
+        return (1, response.json()[0]) #this only should hold one element so we can delte the []-brackets 
     else:
         return (0, f"Error occured! Code: {response.status_code}; Reason: {response.reason}")
     #return s.json()   
@@ -43,14 +45,14 @@ def get_users_json():
     else:
         return (0, f"Error occured! Code: {response.status_code}; Reason: {response.reason}")
 
-def delete(o):
+def delete(o: Entity):
     s = f"{BASE_URL}rest/{o.DB_TYPE}/delete/{o.id}"
     print(s)
     response = requests.get(s)
     print("deleted.")
     print(response.content)
 
-def edit(o: any):
+def edit(o: Entity):
     s = f"{BASE_URL}rest/{o.DB_TYPE}/edit"
     response = requests.put(s, json=o.toDICT())
 
@@ -58,18 +60,19 @@ def edit(o: any):
     print("edited.")
     print(response.content)
 
-def create(o: any):
-    #print("0:" + request.form[0])
-    #print("type:" +  request.form["type"])
+def create(o: Entity):
     response = requests.post(f"{BASE_URL}rest/{o.DB_TYPE}/create", json=o.toDICT())
     print(response.content)
 
-#def delete_customer(id):
-#    response = requests.get(f"http://localhost:8080/rest/customer/delete/{id}")
 
-#def delete_user(id):
-#    response=requests.get(f"http://localhost:8080/rest/user/delete/{id}")
+##ROUTES
+@app.route('/')
+def index():
+    return render_template("Home.html")
 
+@app.route("/readings")
+def route_readings():
+    return render_template("Readings.html")
 
 @app.route('/customers', methods=['GET','POST'])
 def route_customer():
@@ -79,8 +82,6 @@ def route_customer():
 def route_customer_create():
     #this is the actual api-call. DELETE has to be post for some browser-related-reasons i guess. It COULD be a normal method/route with a variable but yeaaah. #TODO.
     print("CREATE-REQ-FORM: " + str(request.form))
-    #print("0:" + request.form[0])
-    #print("type:" +  request.form["type"])
     c = Customer(firstname=request.form["firstname"], lastname=request.form["lastname"], id=-1)
     create(c)
         
@@ -97,7 +98,7 @@ def route_customer_edit():
 
 @app.route('/customers/delete/<id>')
 def route_customer_delete(id):
-    delete(Customer("", "", id=id))
+    delete(Customer(firstname="", lastname="", id=id))
     #delete_customer(id)
     return render_template("Customers.html")
 
@@ -124,7 +125,7 @@ def route_users_edit():
 
 @app.route('/users/delete/<id>')
 def route_user_delete(id):
-    delete(User("", "", "", "", id=id))
+    delete(User(firstname="", lastname="", id=id))
     #delete_user(id)
     return render_template("Users.html")
 
@@ -135,6 +136,17 @@ def context_processors():
         """ returns the formated datetime """
         return datetime.datetime.now().strftime(format)
 
+    def print_readings():
+        cList = get_readings_json()
+        str = """<table id='readings_table' class='object_table'>
+            <tr><th>COMMENT</th><th>CUSTOMER</th><th>kind</th><th>count</th><th>meter_id</th><th>sub</th><th>date</th><th>id</th><th>action</th></tr>"""
+        for r in cList:
+            str += f"""<tr><td>{r['comment']}</td><td>{r['customer']['id']}</td><td>{r['kindofmeter']}</td>
+            <td>{r['metercount']}</td><td>{r['meterid']}</td><td>{r['substitute']}</td><td>{r['dateofreading']}</td><td>{r['id']}</td>
+            <td><a href='/customers/delete/{r['id']}'>[delete]</a></td></tr>"""
+        str += "</table>"
+        return str
+    
     def print_customers():
         cList = get_customers_json()
         str = """<table id='customer_table' class='object_table'>
@@ -160,7 +172,7 @@ def context_processors():
             str += "</table>"
             return str
 
-    return dict(date_now=date_now, print_customers=print_customers, print_users=print_users)
+    return dict(date_now=date_now, print_customers=print_customers, print_users=print_users, print_readings=print_readings)
 
 
 if __name__ == '__main__':

@@ -47,7 +47,7 @@ def get_users_json():
         return (0, f"Error occured! Code: {response.status_code}; Reason: {response.reason}")
 
 def delete(o: Entity):
-    s = f"{BASE_URL}rest/{o.get_get_db_type()}/delete/{o.id}"
+    s = f"{BASE_URL}rest/{o.get_db_type()}/delete/{o.id}"
     print(s)
     response = requests.get(s)
     print("RESPONSE:")
@@ -58,7 +58,6 @@ def edit(o: Entity):
     response = requests.put(s, json=o.toDICT())
 
     print(response.status_code)
-    print("edited.")
     print("RESPONSE:")
     print(response.content)
 
@@ -87,6 +86,22 @@ def route_readings_create():
     r = Readings(id=None, comment=request.form["comment"], customer=c, dateofreading=request.form["dateofreading"], kindofmeter=request.form["kindofmeter"], metercount=request.form["metercount"], meterid=request.form["meterid"])
     print(str(r))
     create(r)
+    return render_template("Readings.html")
+
+@app.route("/readings/edit", methods=["POST"])
+def route_readings_edit():
+    print("EDIT-REQ: " + str((request.form)))
+    
+    c  = Customer(id=request.form["customer"])
+    r = Readings(id=request.form["id"], comment=request.form["comment"], customer=c, dateofreading=request.form["dateofreading"], kindofmeter=request.form["kindofmeter"], metercount=request.form["metercount"], meterid=request.form["meterid"])
+    print(str(r))
+    edit(r)
+    return render_template("Readings.html")
+
+@app.route('/readings/delete/<id>')
+def route_reading_delete(id):
+    delete(Readings(id=id))
+    #delete_customer(id)
     return render_template("Readings.html")
 
 @app.route('/customers')
@@ -158,7 +173,7 @@ def context_processors():
         for r in cList:
             str += f"""<tr><td>{r['comment']}</td><td>{r['customer']['id']}</td><td>{r['kindofmeter']}</td>
             <td>{r['metercount']}</td><td>{r['meterid']}</td><td>{r['substitute']}</td><td>{r['dateofreading']}</td><td>{r['id']}</td>
-            <td><a href='/customers/delete/{r['id']}'>[delete]</a></td></tr>"""
+            <td><a href='/readings/delete/{r['id']}'>[delete]</a></td></tr>"""
         str += "</table>"
         return str
     

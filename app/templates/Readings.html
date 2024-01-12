@@ -27,7 +27,7 @@
         <input type="number" id="dateofreading" name="dateofreading">
         <label for="kindofmeter">kindofmeter: </label>
         <input type="text" id="kindofmeter" name="kindofmeter">
-        <br>
+        <br><br>
         <label for="metercount">metercount: </label>
         <input type="text" id="metercount" name="metercount">
         <label for="meterid">meterid: </label>
@@ -40,11 +40,22 @@
       <h2>Edit reading: </h2>
       <form method="POST" action="/readings/edit">
         <label for="id">ID: </label>
-        <input type="text" id="id" name="id">
-        <label for="firstname">First name: </label>
-        <input type="text" id="firstname" name="firstname">
-        <label for="lastname">Last name: </label>
-        <input type="text" id="lastname" name="lastname">
+        <input type="number" id="id" name="id">
+        <label for="comment">comment: </label>
+        <input type="text" id="comment" name="comment">
+        <label for="customer">customer: </label>
+        <input type="number" id="customer" name="customer">
+        <label for="dateofreading">dateofreading: </label>
+        <input type="number" id="dateofreading" name="dateofreading">
+        <label for="kindofmeter">kindofmeter: </label>
+        <input type="text" id="kindofmeter" name="kindofmeter">
+        <br><br>
+        <label for="metercount">metercount: </label>
+        <input type="number" id="metercount" name="metercount">
+        <label for="meterid">meterid: </label>
+        <input type="text" id="meterid" name="meterid">
+        <label for="substitute">substitute: </label>
+        <input type="text" id="substitute" name="substitute">
         <input name="type" type="submit" value="edit">
       </form>
     </div>

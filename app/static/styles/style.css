@@ -35,7 +35,8 @@ header {
     width: 100%;
     display: flex;
 }
-header > img {
+/*shitty-ass-selector*/
+header > a > img {
     max-height: 64px;
     max-width: 64px;
 }

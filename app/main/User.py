@@ -1,7 +1,7 @@
 from dataclasses import dataclass
-from data.Entity import Entity
+from main.Entity import Entity
 
-from data.constants import DB_Type
+from main.constants import DB_Type
 
 @dataclass 
 class User(Entity):

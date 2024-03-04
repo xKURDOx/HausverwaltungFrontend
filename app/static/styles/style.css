@@ -111,6 +111,14 @@ header > a > img {
     color: var(--font_color_secondary);
   }
 
+.debug_info {
+    background-color: green;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+}
+
 /* 5 - COLORS */
 :root {
     --font_color_primary: rgb(14, 14, 14);

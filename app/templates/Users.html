@@ -12,9 +12,17 @@
 {% block content %}
     <h1>Users: </h1>
 
-    {% autoescape false %}
-    {{ print_users() }}
-    {% endautoescape %}
+    <table id='user_table' class='object_table'>
+      <tr><th>LAST</th><th>FIRST</th><th>PASS</th><th>TOKEN</th><th>ID</th><th>action</th></tr>
+      {% if users_list == None %}
+        <tr><td colspan="100">List is None.</td></tr>
+      {% else %}
+        {% for c in users_list %}
+          <tr><td>{u['lastname']}</td><td>{u['firstname']}</td><td>{u['password']}</td><td>{u['token']}</td><td>{u['id']}</td>
+          <td><a href="/users/delete/{u['id']}">[x]</a></td></tr>
+        {% endfor %}
+      {% endif %}
+    </table>
 
     <div id="management_container">
       <h2>Create user: </h2>

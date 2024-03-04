@@ -1,4 +1,6 @@
 import datetime
+import logging
+from urllib import response
 from flask import Flask, abort, request
 import requests
 from flask import render_template
@@ -16,61 +18,78 @@ app = Flask(__name__)
 ##METHODS
 
 def get_readings_json():
-    s = requests.get(BASE_URL + 'rest/reading/get/all')
-    print(f"GET_CUSTOMERS - JSON: \n {s.json()}")
-    return s.json() 
+    try:
+        s = requests.get(BASE_URL + 'rest/reading/get/all')
+        print(f"GET_READINGS - JSON: \n {s.json()}")
+        return s.json() 
+    except requests.exceptions.ConnectionError as e:
+        #logging.critical(e, exc_info=True) 
+        return None
 
-#this just calls our rest-api and returns the json
 def get_customers_json():
+    """this just calls our rest-api and returns the json
+        returns a list in the scheme of [json | None, (debug_message, debug_code, debug_headers)]
+    """
     try: 
         s = requests.get(BASE_URL + 'rest/customer/get/all')
         print(f"GET_CUSTOMERS - JSON: \n {s.json()}")
-
-        return s.json() 
-    except requests.exceptions.ConnectionError:
-        return None
+        return [s.json(), ["Fetched customers.", s.status_code, s.headers.items()]]
+    except requests.exceptions.ConnectionError as e:
+        #logging.critical(e, exc_info=True) 
+        return [None, ["Fetched customers.", "500", []]]
 
 
 #This doesnt have to be a route. @app.route('/customer/get/<id>/')
-#returns a tuple. either (0, customer-json) or (1, error-message) idk why. I liked error-codes when i wrote this. 
+#returns a list. Scheme: [json | None, (debug_message, debug_code, debug_headers)]
 def get_customer_with_id(id):
-    response = requests.get(f'{BASE_URL}rest/customer/get/{id}')
-    print(response.status_code)
+    try: 
+        response = requests.get(f'{BASE_URL}rest/customer/get/{id}')
+        print(response.status_code)
 
-    if (response.status_code == 200): #s.ok would theoretically work but 204 (no content) results in errors again that would need manual fixing.
-        return (1, response.json()[0]) #this only should hold one element so we can delte the []-brackets 
-    else:
-        return (0, f"Error occured! Code: {response.status_code}; Reason: {response.reason}")
+        if (response.status_code == 200): #s.ok would theoretically work but 204 (no content) results in errors again that would need manual fixing.
+            return [response.json()[0], (response.content, response.status_code, response.headers.items())] #this only should hold one element so we can delte the []-brackets 
+        else:
+            return [response.json()[0], (str(response.content), response.status_code, response.headers.items())]
+    except requests.exceptions.ConnectionError as e:
+        logging.critical(e, exc_info=True) 
+        return [None, ("Fetched customer via ID.", "500", [])]
     #return s.json()   
 
 def get_users_json():
-    response = requests.get(BASE_URL + "rest/user/get/all")
-    if (response.status_code == 200):
-        print(f"GET_USERS - JSON: \n {response.json()}")
-        return (1, response.json())
-    else:
-        return (0, f"Error occured! Code: {response.status_code}; Reason: {response.reason}")
+    try: 
+        s = requests.get(BASE_URL + 'rest/users/get/all')
+        print(f"GET_USERS - JSON: \n {s.json()}")
+        return s.json() 
+    except requests.exceptions.ConnectionError as e:
+        #logging.critical(e, exc_info=True) 
+        return None
 
 def delete(o: Entity):
-    s = f"{BASE_URL}rest/{o.get_db_type()}/delete/{o.id}"
-    print(s)
-    response = requests.get(s)
-    print("RESPONSE:")
-    print(response.content)
+    try:
+        response = requests.get(f"{BASE_URL}rest/{o.get_db_type()}/delete/{o.id}")
+        return [o, [response.content, response.status_code, response.headers.items()]]
+    except requests.exceptions.ConnectionError as e:
+        return [o, ["The server is unreachable.", 503, []]]
 
 def edit(o: Entity):
-    s = f"{BASE_URL}rest/{o.get_db_type()}/edit"
-    response = requests.put(s, json=o.toDICT())
+    try:
+        response = requests.put(f"{BASE_URL}rest/{o.get_db_type()}/edit", json=o.toDICT())
+        return [o, [response.content, response.status_code, response.headers.items()]]
 
-    print(response.status_code)
-    print("RESPONSE:")
-    print(response.content)
+    except requests.exceptions.ConnectionError as e:
+        return [o, ["The server is unreachable.", 503, []]]
+
 
 def create(o: Entity):
-    print(o.__dict__)
-    response = requests.post(f"{BASE_URL}rest/{o.get_db_type()}/create", json=o.toDICT())
-    print("RESPONSE:")
-    print(response.content)
+    """
+    Returns a list [entity, [repsonse-content, resp-code, resp-headers]]
+    if the response shows no errors, the object shjould be created.
+    """
+    try:
+        response = requests.post(f"{BASE_URL}rest/{o.get_db_type()}/create", json=o.toDICT())
+        return [o, [response.content, response.status_code, response.headers.items()]]
+    except requests.exceptions.ConnectionError as e:
+        return [o, ["The server is unreachable.", 503, []]]
 
 
 ##ROUTES
@@ -80,7 +99,8 @@ def index():
 
 @app.route("/readings")
 def route_readings():
-    return render_template("Readings.html")
+
+    return render_template("Readings.html", readings_list=get_readings_json())
 
 @app.route("/readings/create", methods=["POST"])
 def route_readings_create():
@@ -110,42 +130,59 @@ def route_reading_delete(id):
     return render_template("Readings.html") 
 
 @app.route('/customers')
-def route_customer():
+def route_customer(*args):
+    """
+    routes to the customer page. Optionally takes a list of debug-messages [] in the first optional argument.
+    if there are args, the debug-message of the fetch-all gets appended to that; otherwise just the fetch-all message gets returned as debug-message.
+    """
+    print("Args")
+    print(args)
+    if len(args) > 0:
+        print(args[0])
     ###TODO: if this fails; redirect to error page instead of... well. running into an error.
-    
-    cList = get_customers_json()
-    if cList == None:
-        return render_template("Home.html")
-    else:
-        return render_template("Customers.html", customer_list=cList)
+    ###is now done by customers.html itself
+    cList, debug_info = get_customers_json()
+    print("DEBUG-INFO: ")
+    print(debug_info)
+    if len(args) > 0:
+        args[0].append(debug_info)
+        print(args[0])
+
+    #this one is really ugly. Header is never used, either.
+    #could be simplified by adding the other way around (no double-check on len(args))
+    return render_template("Customers.html", customer_list=cList, debug_info=args[0] if len(args) > 0 else [debug_info])
+
+
     
 @app.route('/customers/create', methods=['POST'])
 def route_customer_create():
     #this is the actual api-call. DELETE has to be post for some browser-related-reasons i guess. It COULD be a normal method/route with a variable but yeaaah. #TODO.
     print("CREATE-REQ-FORM: " + str(request.form))
     c = Customer(firstname=request.form["firstname"], lastname=request.form["lastname"], id=-1)
-    create(c)
-        
-    return render_template("Customers.html")
+    c, resp_val = create(c)
+    
+    return route_customer([resp_val])
+ 
 
 @app.route('/customers/edit/', methods=['POST'])
 def route_customer_edit():
     print("EDIT-REQ: " + str(request.form))
 
     c = Customer(firstname=request.form["firstname"], lastname=request.form["lastname"], id=request.form["id"])
-    edit(c)
+    c, resp_val = edit(c)
 
-    return render_template("Customers.html")
+    return route_customer([resp_val])
+
 
 @app.route('/customers/delete/<id>')
 def route_customer_delete(id):
-    delete(Customer(firstname="", lastname="", id=id))
+    c, resp_val = delete(Customer(firstname="", lastname="", id=id))
     #delete_customer(id)
-    return render_template("Customers.html")
+    return route_customer([resp_val])
 
 @app.route('/users')
 def route_users():
-    return render_template("Users.html")
+    return render_template("Users.html", users_list = get_users_json())
 
 @app.route('/users/create', methods=["POST"])
 def route_users_create():
@@ -177,6 +214,7 @@ def context_processors():
         """ returns the formated datetime """
         return datetime.datetime.now().strftime(format)
 
+    @DeprecationWarning
     def print_readings():
         cList = get_readings_json()
         str = """<table id='readings_table' class='object_table'>
@@ -188,6 +226,7 @@ def context_processors():
         str += "</table>"
         return str
     
+    @DeprecationWarning
     def print_customers():
         cList = get_customers_json()
         str = """<table id='customer_table' class='object_table'>
@@ -197,6 +236,7 @@ def context_processors():
         str += "</table>"
         return str
 
+    @DeprecationWarning
     def print_users():
         getUsers = get_users_json()
         if (getUsers[0] == 0): 
@@ -212,7 +252,7 @@ def context_processors():
                 <td><a href='/users/delete/{u['id']}'>[x]</a></td></tr>"""
             str += "</table>"
             return str
-
+        
     return dict(date_now=date_now, print_customers=print_customers, print_users=print_users, print_readings=print_readings)
 
 

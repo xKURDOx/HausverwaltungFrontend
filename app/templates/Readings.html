@@ -12,9 +12,18 @@
 {% block content %}
     <h1>Readings: </h1>
 
-    {% autoescape false %}
-    {{ print_readings() }}
-    {% endautoescape %}
+    <table id='readings_table' class='object_table'>
+      <tr><th>COMMENT</th><th>CUSTOMER</th><th>kind</th><th>count</th><th>meter_id</th><th>sub</th><th>date</th><th>id</th><th>action</th></tr>
+      {% if readings_list == None %}
+        <tr><td colspan="100">List is None.</td></tr>
+      {% else %}
+        {% for c in readings_list %}
+          <tr><td>{r['comment']}</td><td>{r['customer']['id']}</td><td>{r['kindofmeter']}</td>
+          <td>{r['metercount']}</td><td>{r['meterid']}</td><td>{r['substitute']}</td><td>{r['dateofreading']}</td><td>{r['id']}</td>
+          <td><a href="/readings/delete/{r['id']}">[delete]</a></td></tr>
+        {% endfor %}
+      {% endif %}
+    </table>
 
     <div id="management_container">
       <h2>Create reading: </h2>

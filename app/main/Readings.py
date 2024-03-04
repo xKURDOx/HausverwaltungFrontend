@@ -7,7 +7,7 @@ from main.constants import DB_Type
 @dataclass 
 class Readings(Entity):
     comment: str = ""
-    customer: Customer = None
+    customer: Customer | None = None
     dateofreading: int = 0
     kindofmeter: str = ""
     metercount: int = 0
@@ -20,8 +20,9 @@ class Readings(Entity):
         print(v)
         v.pop("_DB_TYPE") #we dont want this in our actual object, right.
 
-        v["customer"] = self.customer.toDICT() #ithinkthiscouldbebetter
-        print(v)
+        if (self.customer is not None):
+            v["customer"] = self.customer.toDICT() #ithinkthiscouldbebetter
+            print(v)
         return v
 
    

@@ -17,16 +17,16 @@
       {% if users_list == None %}
         <tr><td colspan="100">List is None.</td></tr>
       {% else %}
-        {% for c in users_list %}
-          <tr><td>{u['lastname']}</td><td>{u['firstname']}</td><td>{u['password']}</td><td>{u['token']}</td><td>{u['id']}</td>
-          <td><a href="/users/delete/{u['id']}">[x]</a></td></tr>
+        {% for u in users_list %}
+          <tr><td>{{u['lastname']}}</td><td>{{u['firstname']}}</td><td>{{u['password']}}</td><td>{{u['token']}}</td><td>{{u['id']}}</td>
+          <td><a href="/user/delete/{{u['id']}}">[x]</a></td></tr>
         {% endfor %}
       {% endif %}
     </table>
 
     <div id="management_container">
       <h2>Create user: </h2>
-      <form method="POST" action="/users/create">
+      <form method="POST" action="/user/create">
         <label for="firstname">First name: </label>
         <input type="text" id="firstname" name="firstname">
         <label for="lastname">Last name: </label>
@@ -39,7 +39,7 @@
       </form>
 
       <h2>Edit user: </h2>
-      <form method="POST" action="/users/edit">
+      <form method="POST" action="/user/edit">
         <label for="id">ID: </label>
         <input type="text" id="id" name="id">
         <label for="firstname">First name: </label>

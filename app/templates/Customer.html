@@ -10,22 +10,24 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Customers: </h1>
+    <div id="table_wrapper">
+      <h2>Customers: </h2>
 
-    <table id='customer_table' class='object_table'>
-      <tr><th>LAST</th><th>FIRST</th><th>ID</th><th>action</th></tr>
-      {% if customer_list == None %}
-        <tr><td colspan="100">List is None.</td></tr>
-      {% else %}
-        {% for c in customer_list %}
-          <tr><td>{{c['lastname']}}</td><td>{{c['firstname']}}</td><td>{{c['id']}}</td><td><a href='/customers/delete/{{c["id"]}}'>[delete]</a></td></tr>
-        {% endfor %}
-      {% endif %}
-    </table>
+      <table id='customer_table' class='object_table'>
+        <tr><th>LAST</th><th>FIRST</th><th>ID</th><th>action</th></tr>
+        {% if customer_list == None %}
+          <tr><td colspan="100">List is None.</td></tr>
+        {% else %}
+          {% for c in customer_list %}
+            <tr><td>{{c['lastname']}}</td><td>{{c['firstname']}}</td><td>{{c['id']}}</td><td><a href='/customers/delete/{{c["id"]}}'>[delete]</a></td></tr>
+          {% endfor %}
+        {% endif %}
+      </table>
+    </div>
 
     <div id="management_container">
       <h2>Create customer: </h2>
-      <form method="POST" action="/customers/create">
+      <form method="POST" action="/customer/create">
         <label for="firstname">First name: </label>
         <input type="text" id="firstname" name="firstname">
         <label for="lastname">Last name: </label>
@@ -34,7 +36,7 @@
       </form>
 
       <h2>Edit customer: </h2>
-      <form method="POST" action="/customers/edit">
+      <form method="POST" action="/customer/edit">
         <label for="id">ID: </label>
         <input type="text" id="id" name="id">
         <label for="firstname">First name: </label>
@@ -45,14 +47,6 @@
       </form>
     </div>
 
-    <div class="debug_info">
-      Debug:
-      {% if debug_info | length > 0 %}
-        {% for debug in debug_info %}
-          Content: {{debug[0]}}; Status_Code: {{debug[1]}}; Headers: {{debug[2]}}</br>
-        {% endfor %}
-      {% endif %}
-    </div>
 
 {% endblock %}
 

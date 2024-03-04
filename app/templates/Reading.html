@@ -10,24 +10,27 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Readings: </h1>
+    <div id="table_wrapper">
+      <h2>Readings: </h2>
 
-    <table id='readings_table' class='object_table'>
-      <tr><th>COMMENT</th><th>CUSTOMER</th><th>kind</th><th>count</th><th>meter_id</th><th>sub</th><th>date</th><th>id</th><th>action</th></tr>
-      {% if readings_list == None %}
-        <tr><td colspan="100">List is None.</td></tr>
-      {% else %}
-        {% for c in readings_list %}
-          <tr><td>{r['comment']}</td><td>{r['customer']['id']}</td><td>{r['kindofmeter']}</td>
-          <td>{r['metercount']}</td><td>{r['meterid']}</td><td>{r['substitute']}</td><td>{r['dateofreading']}</td><td>{r['id']}</td>
-          <td><a href="/readings/delete/{r['id']}">[delete]</a></td></tr>
-        {% endfor %}
-      {% endif %}
-    </table>
+      <table id='readings_table' class='object_table'>
+        <tr><th>COMMENT</th><th>CUSTOMER</th><th>kind</th><th>count</th><th>meter_id</th><th>sub</th><th>date</th><th>id</th><th>action</th></tr>
+        {% if readings_list == None %}
+          <tr><td colspan="100">List is None.</td></tr>
+        {% else %}
+          {% for r in readings_list %}
+            <tr><td>{{r['comment']}}</td><td>{{r['customer']['id']}}</td><td>{{r['kindofmeter']}}</td>
+            <td>{{r['metercount']}}</td><td>{{r['meterid']}}</td><td>{{r['substitute']}}</td><td>{{r['dateofreading']}}</td><td>{{r['id']}}</td>
+            <td><a href="/reading/delete/{{r['id']}}">[delete]</a></td></tr>
+          {% endfor %}
+          
+        {% endif %}
+      </table>
+    </div>
 
     <div id="management_container">
       <h2>Create reading: </h2>
-      <form method="POST" action="/readings/create">
+      <form method="POST" action="/reading/create">
         <label for="comment">comment: </label>
         <input type="text" id="comment" name="comment">
         <label for="customer">customer: </label>
@@ -36,9 +39,8 @@
         <input type="number" id="dateofreading" name="dateofreading">
         <label for="kindofmeter">kindofmeter: </label>
         <input type="text" id="kindofmeter" name="kindofmeter">
-        <br><br>
         <label for="metercount">metercount: </label>
-        <input type="text" id="metercount" name="metercount">
+        <input type="number" id="metercount" name="metercount">
         <label for="meterid">meterid: </label>
         <input type="number" id="meterid" name="meterid">
         <label for="substitute">substitute: </label>
@@ -58,7 +60,6 @@
         <input type="number" id="dateofreading" name="dateofreading">
         <label for="kindofmeter">kindofmeter: </label>
         <input type="text" id="kindofmeter" name="kindofmeter">
-        <br><br>
         <label for="metercount">metercount: </label>
         <input type="number" id="metercount" name="metercount">
         <label for="meterid">meterid: </label>
@@ -68,6 +69,8 @@
         <input name="type" type="submit" value="edit">
       </form>
     </div>
+
+
 
 
 {% endblock %}

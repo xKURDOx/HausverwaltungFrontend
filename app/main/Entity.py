@@ -4,7 +4,7 @@ import json
 
 @dataclass
 class Entity():
-    id: int
+    id: int | None
     _DB_TYPE: str
 
     @classmethod

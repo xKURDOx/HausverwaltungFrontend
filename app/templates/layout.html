@@ -9,7 +9,18 @@
   <body>
     <header><a  href="http://localhost:5000/"><img src="/static/data/logo.png"alt="HV"></a></header>
     <div id="content-wrapper">
-      <div id="content">{% block content %}{% endblock %}</div>
+      <div id="content">
+        {% block content %}
+        {% endblock %}
+        <div id="debug-list">
+          <h4>Debug:</h4><br>
+          {% if debug_list | length > 0 %}
+            {% for n in range(0, 5 if debug_list | length > 5 else debug_list | length) %}
+              Content: {{debug_list[-1-n][0]}}; Status_Code: {{debug_list[-1-n][1]}}; Headers: {{debug_list[-1-n][2]}}</br>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
     </div>
     <div id="footer-wrapper">
       <div id="footer">

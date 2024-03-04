@@ -48,7 +48,7 @@ header > a > img {
     height: 5%;
     width: 100%;
     border-top: 1px solid var(--border_color);
-    /* z-index: 10; */
+    z-index: 10;
     background: var(--background_color_teritary);
 }
 #footer {
@@ -68,9 +68,18 @@ header > a > img {
     left: 50%;
     height: 80%;
     width: 95%;
-    padding: 10px;
     position: absolute;
     transform: translate(-50%, -50%);
+}
+
+#content {
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    justify-content: space-between;
 }
 
 /*this sets everything inside the content to be centered *somehow* */
@@ -78,11 +87,28 @@ header > a > img {
     margin: 0 auto;
 }
 
+#management_container {
+    display: flex;
+    justify-content: space-around;
+
+}
+
 #management_container > form {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    /*  try to play with width to undertand more about flex-wrap  */
+    width: 350px;
+    margin: 10px;
+    background-color: var(--background_color_primary);
+    border: 1px dashed grey;
+    flex-wrap: wrap;
+
+}
+
+#management_container > form > label, #management_container > form > input {
+    background-color: var(--background_color_secondary);
+    margin: 5px;
+    padding: 8px 14px;
+    text-align: center;
 }
 
 
@@ -111,13 +137,13 @@ header > a > img {
     color: var(--font_color_secondary);
   }
 
-.debug_info {
+#debug-list {
     background-color: green;
-    position: absolute;
     width: 100%;
     left: 0;
     bottom: 0;
 }
+
 
 /* 5 - COLORS */
 :root {

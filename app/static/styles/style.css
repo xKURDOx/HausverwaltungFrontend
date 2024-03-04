@@ -134,23 +134,27 @@ header > a > img {
     width: 100%;
   }
   
-  .object_table td, .object_table th {
-    border: 1px solid #ddd;
-    padding: 6px;
-  }
+.object_table td, .object_table th {
+border: 1px solid #ddd;
+padding: 6px;
+}
   
-  .object_table tr:nth-child(even) {background-color: var(--table_color_even);}
-  .object_table tr:nth-child(odd) {background-color: var(--table_color_odd);}
-  
-  .object_table tr:hover {background-color: var(--table_color_hover);}
-  
-  .object_table th {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    text-align: left;
-    background-color: var(--table_color_header);
-    color: var(--font_color_secondary);
-  }
+.object_table tr:nth-child(even) {background-color: var(--table_color_even);}
+.object_table tr:nth-child(odd) {background-color: var(--table_color_odd);}
+
+.object_table tr:hover {background-color: var(--table_color_hover);}
+
+.object_table th {
+padding-top: 8px;
+padding-bottom: 8px;
+text-align: left;
+background-color: var(--table_color_header);
+color: var(--font_color_secondary);
+}
+
+#highlighted_id {
+    background-color: beige;
+}
 
 #debug-list {
     background-color: green;

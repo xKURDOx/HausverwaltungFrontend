@@ -19,7 +19,7 @@
           <tr><td colspan="100">List is None.</td></tr>
         {% else %}
           {% for r in readings_list %}
-            <tr><td>{{r['comment']}}</td><td>{{r['customer']['id']}}</td><td>{{r['kindofmeter']}}</td>
+            <tr><td>{{r['comment']}}</td><td><a href="/customer/{{r['customer']['id']}}">{{r['customer']['id']}}</a></td><td>{{r['kindofmeter']}}</td>
             <td>{{r['metercount']}}</td><td>{{r['meterid']}}</td><td>{{r['substitute']}}</td><td>{{r['dateofreading']}}</td><td>{{r['id']}}</td>
             <td><a href="/reading/delete/{{r['id']}}">[delete]</a></td></tr>
           {% endfor %}

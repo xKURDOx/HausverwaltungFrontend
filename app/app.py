@@ -1,3 +1,11 @@
+###
+#Hey God, it's me again.
+#Please take care of this code,
+#I really can't do this anymore.
+#
+#but hey, this code felt really 90s to write :3 [but worse]
+###
+
 import datetime
 import logging
 from urllib import response
@@ -25,7 +33,7 @@ def get_readings_json():
         return [s.json(), ["Fetched Readings.", s.status_code, s.headers.items()]]
     except requests.exceptions.ConnectionError as e:
         #logging.critical(e, exc_info=True) 
-        return [None, ["Error fetching Readings.", "500", []]]
+        return [None, ["Error fetching Readings. Connection not established.", "500", []]]
 
 def get_customer_json():
     """this just calls our rest-api and returns the json
@@ -37,10 +45,10 @@ def get_customer_json():
         return [s.json(), ["Fetched customers.", s.status_code, s.headers.items()]]
     except requests.exceptions.ConnectionError as e:
         #logging.critical(e, exc_info=True) 
-        return [None, ["Error fetching customers customers.", "500", []]]
+        return [None, ["Error fetching customers. Connection not established.", "500", []]]
 
 
-#This doesnt have to be a route. @app.route('/customer/get/<id>/')
+#This doesnt have to be a route. @app.route('/customer/get/<id>/') [maybe bc it isnt even used?]
 #returns a list. Scheme: [json | None, (debug_message, debug_code, debug_headers)]
 def get_customer_with_id(id):
     try: 
@@ -48,12 +56,12 @@ def get_customer_with_id(id):
         print(response.status_code)
 
         if (response.status_code == 200): #s.ok would theoretically work but 204 (no content) results in errors again that would need manual fixing.
-            return [response.json()[0], [response.content, response.status_code, response.headers.items()]] #this only should hold one element so we can delte the []-brackets 
+            return [response.json()[0], [response.content, response.status_code, response.headers.items()]] #the response.json() only should hold one element so we can delte the []-brackets 
         else:
             return [response.json()[0], [str(response.content), response.status_code, response.headers.items()]]
     except requests.exceptions.ConnectionError as e:
         #logging.critical(e, exc_info=True) 
-        return [None,  ["Fetched customer via ID.", "500", []]]
+        return [None,  ["Error fetching via ID. Connection not established.", "500", []]]
     #return s.json()   
 
 def get_user_json():
@@ -63,7 +71,7 @@ def get_user_json():
         return [s.json(), ["Fetched users.", s.status_code, s.headers.items()]]
     except requests.exceptions.ConnectionError as e:
         #logging.critical(e, exc_info=True) 
-        return [None, ["Error fetching customers customers.", "500", []]]
+        return [None, ["Error fetching user. Connection not established.", "500", []]]
 
 def delete(o: Entity):
     try:
@@ -88,7 +96,7 @@ def create(o: Entity):
     """
     try:
         response = requests.post(f"{BASE_URL}rest/{o.get_db_type()}/create", json=o.toDICT())
-        return [o, [response.content, response.status_code, response.headers.items()]]
+        return [o, [response.content.decode("utf-8"), response.status_code, response.headers.items()]]
     except requests.exceptions.ConnectionError as e:
         return [o, ["The server is unreachable.", 503, []]]
 
@@ -142,6 +150,7 @@ def route_customer():
     """
     routes to the customer page. Optionally takes a list of debug-messages [] in the first optional argument.
     if there are args, the debug-message of the fetch-all gets appended to that; otherwise just the fetch-all message gets returned as debug-message.
+    MAYBE-TODO: make it so that links from readings call this page and highlight the selected id?
     """
     
     ###TODO: if this fails; redirect to error page instead of... well. running into an error.
@@ -154,8 +163,20 @@ def route_customer():
 
     #this one is really ugly. Header is never used, either.
     #could be simplified by adding the other way around (no double-check on len(args))
-    return render_template("Customer.html", customer_list=cList, debug_list=debug_list)
+    return render_template("Customer.html", customer_list=cList, debug_list=debug_list) #actually, -1 is better maybe bc type-wise a int cant be None? 
 
+@app.route('/customer/<id>')
+def route_customer_highlight_id(id):
+    '''
+    does the same as route_customer but highlights the given id.
+    '''
+    print(id)
+    cList, debug_info = get_customer_json()
+    print("DEBUG-INFO: ")
+    print(debug_info)
+    debug_list.append(debug_info)
+    print(debug_list)
+    return render_template("Customer.html", customer_list=cList, debug_list=debug_list, highlighted_id=int(id)) #lazy typecheck, huh.... Fck i hate types. Why do I keep bringing them to python?
 
     
 @app.route('/customer/create', methods=['POST'])

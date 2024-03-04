@@ -19,7 +19,14 @@
           <tr><td colspan="100">List is None.</td></tr>
         {% else %}
           {% for c in customer_list %}
-            <tr><td>{{c['lastname']}}</td><td>{{c['firstname']}}</td><td>{{c['id']}}</td><td><a href='/customer/delete/{{c["id"]}}'>[delete]</a></td></tr>
+            {{highlighted_id}}
+            {{c['id']}}
+            {{c['id'] == highlighted_id}}
+            {% if c['id'] == highlighted_id %}
+              <tr id="highlighted_id"><td>{{c['lastname']}}</td><td>{{c['firstname']}}</td><td>{{c['id']}}</td><td><a href='/customer/delete/{{c["id"]}}'>[delete]</a></td></tr>
+            {% else %}
+              <tr><td>{{c['lastname']}}</td><td>{{c['firstname']}}</td><td>{{c['id']}}</td><td><a href='/customer/delete/{{c["id"]}}'>[delete]</a></td></tr>
+            {% endif %}
           {% endfor %}
         {% endif %}
       </table>

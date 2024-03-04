@@ -105,7 +105,7 @@ def route_reading():
     print(readings_list)
     debug_list.append(debug_info)
     print(debug_list)
-    return render_template("Readings.html", debug_list=debug_list, readings_list=readings_list)
+    return render_template("Reading.html", debug_list=debug_list, readings_list=readings_list)
 
 @app.route("/reading/create", methods=["POST"])
 def route_reading_create():
@@ -130,7 +130,7 @@ def route_reading_edit():
     debug_list.append(resp)
     return route_reading()
 
-@app.route('/readings/delete/<id>')
+@app.route('/reading/delete/<id>')
 def route_reading_delete(id):
     _, resp = delete(Readings(id=id))
     debug_list.append(resp)

@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from data.Customer import Customer
-from data.Entity import Entity
+from main.Customer import Customer
+from main.Entity import Entity
 
-from data.constants import DB_Type
+from main.constants import DB_Type
 
 @dataclass 
 class Readings(Entity):

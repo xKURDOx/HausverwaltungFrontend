@@ -33,6 +33,12 @@ header {
     /*z-index: 10 !important;*/
     position: fixed;
     width: 100%;
+    display: flex;
+}
+/*shitty-ass-selector*/
+header > a > img {
+    max-height: 64px;
+    max-width: 64px;
 }
 
 /* 3 - FOOTER */
@@ -110,9 +116,9 @@ header {
     --font_color_primary: rgb(14, 14, 14);
     --font_color_secondary: white;
 
-    --background_color_primary: rgb(155, 235, 36);
+    --background_color_primary: rgb(65, 77, 48);
     --background_color_secondary: rgb(137, 189, 61);
-    --background_color_teritary: rgb(78, 104, 54);
+    --background_color_teritary: rgb(98, 172, 29);
 
     --border_color: black;
 

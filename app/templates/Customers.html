@@ -12,9 +12,19 @@
 {% block content %}
     <h1>Customers: </h1>
 
-    {% autoescape false %}
+    <!--{% autoescape false %}
     {{ print_customers() }}
     {% endautoescape %}
+ 
+    {{customer_list}} 
+    -->
+    <table id='customer_table' class='object_table'>
+      <tr><th>LAST</th><th>FIRST</th><th>ID</th><th>action</th></tr>
+
+      {% for c in customer_list %}
+        <tr><td>{{c['lastname']}}</td><td>{{c['firstname']}}</td><td>{{c['id']}}</td><td><a href='/customers/delete/{{c["id"]}}'>[delete]</a></td></tr>
+      {% endfor %}
+    </table>
 
     <div id="management_container">
       <h2>Create customer: </h2>

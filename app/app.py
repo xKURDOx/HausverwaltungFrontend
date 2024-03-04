@@ -1,13 +1,13 @@
 import datetime
-from flask import Flask, request
+from flask import Flask, abort, request
 import requests
 from flask import render_template
-from data.Readings import Readings
+from main.Readings import Readings
 
-from data.Entity import Entity
-from data.Customer import Customer
-from data.User import User
-from data.constants import BASE_URL
+from main.Entity import Entity
+from main.Customer import Customer
+from main.User import User
+from main.constants import BASE_URL
 
 
 ##VARS
@@ -22,9 +22,14 @@ def get_readings_json():
 
 #this just calls our rest-api and returns the json
 def get_customers_json():
-    s = requests.get(BASE_URL + 'rest/customer/get/all')
-    print(f"GET_CUSTOMERS - JSON: \n {s.json()}")
-    return s.json() 
+    try: 
+        s = requests.get(BASE_URL + 'rest/customer/get/all')
+        print(f"GET_CUSTOMERS - JSON: \n {s.json()}")
+
+        return s.json() 
+    except requests.exceptions.ConnectionError:
+        return None
+
 
 #This doesnt have to be a route. @app.route('/customer/get/<id>/')
 #returns a tuple. either (0, customer-json) or (1, error-message) idk why. I liked error-codes when i wrote this. 
@@ -102,12 +107,18 @@ def route_readings_edit():
 def route_reading_delete(id):
     delete(Readings(id=id))
     #delete_customer(id)
-    return render_template("Readings.html")
+    return render_template("Readings.html") 
 
 @app.route('/customers')
 def route_customer():
-    return render_template("Customers.html")
-
+    ###TODO: if this fails; redirect to error page instead of... well. running into an error.
+    
+    cList = get_customers_json()
+    if cList == None:
+        return render_template("Home.html")
+    else:
+        return render_template("Customers.html", customer_list=cList)
+    
 @app.route('/customers/create', methods=['POST'])
 def route_customer_create():
     #this is the actual api-call. DELETE has to be post for some browser-related-reasons i guess. It COULD be a normal method/route with a variable but yeaaah. #TODO.

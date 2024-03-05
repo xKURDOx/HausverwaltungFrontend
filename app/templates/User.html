@@ -14,10 +14,10 @@
 
     <table id='user_table' class='object_table'>
       <tr><th>LAST</th><th>FIRST</th><th>PASS</th><th>TOKEN</th><th>ID</th><th>action</th></tr>
-      {% if users_list == None %}
+        {% if user_list == None or user_list | length == 0 %}
         <tr><td colspan="100">List is None.</td></tr>
       {% else %}
-        {% for u in users_list %}
+        {% for u in user_list %}
           <tr><td>{{u['lastname']}}</td><td>{{u['firstname']}}</td><td>{{u['password']}}</td><td>{{u['token']}}</td><td>{{u['id']}}</td>
           <td><a href="/user/delete/{{u['id']}}">[x]</a></td></tr>
         {% endfor %}

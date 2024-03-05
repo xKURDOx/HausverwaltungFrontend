@@ -26,7 +26,7 @@ debug_list = []
 
 ##METHODS
 
-def get_readings_json():
+def get_reading_json():
     try:
         s = requests.get(BASE_URL + 'rest/reading/get/all')
         print(f"GET_READINGS - JSON: \n {s.json()}")
@@ -106,15 +106,15 @@ def index():
 
 @app.route("/reading")
 def route_reading():
-    readings_list, debug_info = get_readings_json()
+    reading_list, debug_info = get_reading_json()
     debug_list.append(debug_info)
-    return render_template("Reading.html", debug_list=debug_list, readings_list=readings_list)
+    return render_template("Reading.html", debug_list=debug_list, reading_list=reading_list)
 
 @app.route("/reading/create", methods=["POST"])
 def route_reading_create():
     print("CREATE-REQ-FORM: " + str(request.form))
     #fake-customer for request:
-    c  = Customer(id=int(request.form["customer"]))
+    c  = Customer(id=int(request.form["customer_id"]), firstname=request.form["customer_first"], lastname=request.form["customer_last"])
     #none is 'better' than -1 i gues butttt does it maaatter?
     r = Readings(id=None, comment=request.form["comment"], customer=c, dateofreading=int(request.form["dateofreading"]), kindofmeter=request.form["kindofmeter"], metercount=int(request.form["metercount"]), meterid=request.form["meterid"])
     r, resp = create(r)
@@ -196,7 +196,7 @@ def route_customer_delete(id):
 def route_user():
     uList, resp = get_user_json()
     debug_list.append(resp) #TODO: Again; why am I doing this? Fcking masochist.
-    return render_template("User.html", users_list = uList, debug_list=debug_list)
+    return render_template("User.html", user_list = uList, debug_list=debug_list)
 
 @app.route('/user/create', methods=["POST"])
 def route_user_create():
@@ -233,7 +233,7 @@ def context_processors():
 
     @DeprecationWarning
     def print_readings():
-        cList = get_readings_json()
+        cList = get_reading_json()
         if (cList is not None):
             str = """<table id='readings_table' class='object_table'>
                 <tr><th>COMMENT</th><th>CUSTOMER</th><th>kind</th><th>count</th><th>meter_id</th><th>sub</th><th>date</th><th>id</th><th>action</th></tr>"""

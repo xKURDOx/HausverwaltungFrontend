@@ -15,10 +15,10 @@
 
       <table id='readings_table' class='object_table'>
         <tr><th>COMMENT</th><th>CUSTOMER</th><th>kind</th><th>count</th><th>meter_id</th><th>sub</th><th>date</th><th>id</th><th>action</th></tr>
-        {% if readings_list == None %}
+        {% if reading_list == None or reading_list | length == 0 %}
           <tr><td colspan="100">List is None.</td></tr>
         {% else %}
-          {% for r in readings_list %}
+          {% for r in reading_list %}
             <tr><td>{{r['comment']}}</td><td><a href="/customer/{{r['customer']['id']}}">{{r['customer']['id']}}</a></td><td>{{r['kindofmeter']}}</td>
             <td>{{r['metercount']}}</td><td>{{r['meterid']}}</td><td>{{r['substitute']}}</td><td>{{r['dateofreading']}}</td><td>{{r['id']}}</td>
             <td><a href="/reading/delete/{{r['id']}}">[delete]</a></td></tr>
@@ -33,8 +33,12 @@
       <form method="POST" action="/reading/create">
         <label for="comment">comment: </label>
         <input type="text" id="comment" name="comment">
-        <label for="customer">customer: </label>
-        <input type="number" id="customer" name="customer">
+        <label for="customer_id">customer_id: </label>
+        <input type="number" id="customer_id" name="customer_id">
+        <label for="customer_first_name">customer_first: </label>
+        <input type="text" id="customer_first" name="customer_first">
+        <label for="customer_last">customer_last: </label>
+        <input type="text" id="customer_last" name="customer_last">
         <label for="dateofreading">dateofreading: </label>
         <input type="number" id="dateofreading" name="dateofreading">
         <label for="kindofmeter">kindofmeter: </label>

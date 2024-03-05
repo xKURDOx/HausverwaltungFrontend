@@ -14,6 +14,9 @@
         {% endblock %}
         <div id="debug-list">
           <h4>Debug:</h4><br>
+          {##
+          Warning: this prints the 5 last-added elements of debug-list, but debug-list never gets erased so it grows indefinitely  
+          ##}
           {% if debug_list | length > 0 %}
             {% for n in range(0, 5 if debug_list | length > 5 else debug_list | length) %}
               Content: {{debug_list[-1-n][0]}}; Status_Code: {{debug_list[-1-n][1]}}; Headers: {{debug_list[-1-n][2]}}</br>

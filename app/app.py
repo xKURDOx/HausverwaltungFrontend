@@ -121,7 +121,7 @@ def route_reading_create():
     #fake-customer for request:
     c  = Customer(id=int(request.form["customer"]))
     #none is 'better' than -1 i gues butttt does it maaatter?
-    r = Readings(id=None, comment=request.form["comment"], customer=c, dateofreading=request.form["dateofreading"], kindofmeter=request.form["kindofmeter"], metercount=int(request.form["metercount"]), meterid=request.form["meterid"])
+    r = Readings(id=None, comment=request.form["comment"], customer=c, dateofreading=int(request.form["dateofreading"]), kindofmeter=request.form["kindofmeter"], metercount=int(request.form["metercount"]), meterid=request.form["meterid"])
     print(str(r))
     r, resp = create(r)
 

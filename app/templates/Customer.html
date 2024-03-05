@@ -15,13 +15,10 @@
 
       <table id='customer_table' class='object_table'>
         <tr><th>LAST</th><th>FIRST</th><th>ID</th><th>action</th></tr>
-        {% if customer_list == None %}
+        {% if customer_list == None or customer_list | length == 0 %}
           <tr><td colspan="100">List is None.</td></tr>
         {% else %}
           {% for c in customer_list %}
-            {{highlighted_id}}
-            {{c['id']}}
-            {{c['id'] == highlighted_id}}
             {% if c['id'] == highlighted_id %}
               <tr id="highlighted_id"><td>{{c['lastname']}}</td><td>{{c['firstname']}}</td><td>{{c['id']}}</td><td><a href='/customer/delete/{{c["id"]}}'>[delete]</a></td></tr>
             {% else %}

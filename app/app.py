@@ -53,8 +53,6 @@ def get_customer_json():
 def get_customer_with_id(id):
     try: 
         response = requests.get(f'{BASE_URL}rest/customer/get/{id}')
-        print(response.status_code)
-
         if (response.status_code == 200): #s.ok would theoretically work but 204 (no content) results in errors again that would need manual fixing.
             return [response.json()[0], [response.content, response.status_code, response.headers.items()]] #the response.json() only should hold one element so we can delte the []-brackets 
         else:
@@ -109,10 +107,7 @@ def index():
 @app.route("/reading")
 def route_reading():
     readings_list, debug_info = get_readings_json()
-    print("?????????????????????")
-    print(readings_list)
     debug_list.append(debug_info)
-    print(debug_list)
     return render_template("Reading.html", debug_list=debug_list, readings_list=readings_list)
 
 @app.route("/reading/create", methods=["POST"])
@@ -122,7 +117,6 @@ def route_reading_create():
     c  = Customer(id=int(request.form["customer"]))
     #none is 'better' than -1 i gues butttt does it maaatter?
     r = Readings(id=None, comment=request.form["comment"], customer=c, dateofreading=int(request.form["dateofreading"]), kindofmeter=request.form["kindofmeter"], metercount=int(request.form["metercount"]), meterid=request.form["meterid"])
-    print(str(r))
     r, resp = create(r)
 
     debug_list.append(resp) #TODO: why am i even dragging this shit here if it's a global-scope var now???
@@ -153,16 +147,9 @@ def route_customer():
     MAYBE-TODO: make it so that links from readings call this page and highlight the selected id?
     """
     
-    ###TODO: if this fails; redirect to error page instead of... well. running into an error.
-    ###is now done by customers.html itself
     cList, debug_info = get_customer_json()
-    print("DEBUG-INFO: ")
-    print(debug_info)
     debug_list.append(debug_info)
-    print(debug_list)
 
-    #this one is really ugly. Header is never used, either.
-    #could be simplified by adding the other way around (no double-check on len(args))
     return render_template("Customer.html", customer_list=cList, debug_list=debug_list) #actually, -1 is better maybe bc type-wise a int cant be None? 
 
 @app.route('/customer/<id>')
@@ -170,13 +157,8 @@ def route_customer_highlight_id(id):
     '''
     does the same as route_customer but highlights the given id.
     '''
-    print(id)
     cList, debug_info = get_customer_json()
-    print("DEBUG-INFO: ")
-    print(debug_info)
-    debug_list.append(debug_info)
-    print(debug_list)
-    return render_template("Customer.html", customer_list=cList, debug_list=debug_list, highlighted_id=int(id)) #lazy typecheck, huh.... Fck i hate types. Why do I keep bringing them to python?
+    return render_template("Customer.html", customer_list=cList, debug_list=debug_info, highlighted_id=int(id)) #lazy typecheck, huh.... Fck i hate types. Why do I keep bringing them to python?
 
     
 @app.route('/customer/create', methods=['POST'])
